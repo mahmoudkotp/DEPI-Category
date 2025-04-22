@@ -14,7 +14,10 @@ namespace DataAccess.Repository.IRepository
         public AddressRepository Addresses { get; }
 		//public CategoryRepository Categories { get; }
 		ICategoryRepository CategoryRepository { get; }
-
+		//public OrderRepository Orders { get; }
+		IOrderRepository Orders { get; }
+		//public OrderItemRepository OrderItems { get; }
+		IOrderItemRepository OrderItems { get; }
 
 		Task SaveAsync();
     }

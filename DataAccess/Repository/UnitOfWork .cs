@@ -18,14 +18,18 @@ namespace DataAccess.Repository
         public WishlistRepository Wishlists { get; private set; }
         public AddressRepository Addresses { get; private set; }
 		public ICategoryRepository CategoryRepository { get; private set; }
-        //jk
+		//public OrderRepository Order { get; private set; }
+		public IOrderRepository Orders { get; private set; }
+		//public OrderItemRepository OrderItem { get; private set; }
+		public IOrderItemRepository OrderItems { get; private set; }
 
-
-
-		public UnitOfWork(AppDbContext context, AppUserRepository appUserRepository,
+		public UnitOfWork(AppDbContext context, 
+			AppUserRepository appUserRepository,
             ProductWishlistRepository productWishlistRepository,
-            WishlistRepository wishlistRepository, AddressRepository addressRepository)
-		    //CategoryRepository categoryRepository
+            WishlistRepository wishlistRepository,
+			AddressRepository addressRepository)
+			//IOrderRepository orderRepository
+			//CategoryRepository categoryRepository
 		{
             _context = context;
             AppUsers = appUserRepository;
@@ -33,6 +37,7 @@ namespace DataAccess.Repository
             Wishlists = wishlistRepository;
             Addresses = addressRepository;
 			//Category = categoryRepository;
+			//OrderRepository = orderRepository;
 		}
 
 		

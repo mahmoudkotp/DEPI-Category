@@ -32,7 +32,6 @@ builder.Services.AddScoped<ProductWishlistRepository>();
 builder.Services.AddScoped<AddressRepository>();
 builder.Services.AddScoped<DbInitializer>();
 
-
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
 builder.Services.AddAuthentication(x =>
 {
@@ -99,8 +98,13 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 //Category Repository
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+//builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+//builder.Services.AddTransient<IOrderItemRepository, OrderItemRepository>();
+
 // Register ICategoryRepository with dependency injection
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+//builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+//builder.Services.AddTransient<IOrderItemRepository, OrderItemRepository>();
 
 
 var app = builder.Build();
@@ -121,6 +125,7 @@ app.UseAuthorization();
 seedDatabase();
 app.MapControllers();
 
+
 app.Run();
 
 void seedDatabase()
@@ -131,3 +136,4 @@ void seedDatabase()
         dbInitializer.Initialize();
     }
 }
+

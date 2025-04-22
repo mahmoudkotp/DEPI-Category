@@ -13,7 +13,6 @@ namespace DataAccess.Repository
     {
         private readonly AppDbContext _context;
         private readonly DbSet<T> dbSet;
-		//private readonly ApplicationDbContext _context;
 
 		public Repository(AppDbContext context)
         {
@@ -76,7 +75,6 @@ namespace DataAccess.Repository
 
             return await query.ToListAsync();
          }
-
 			
 		public async Task<IEnumerable<T>> GetAllAsync()
 		{
@@ -110,7 +108,6 @@ namespace DataAccess.Repository
 			return await query.FirstOrDefaultAsync(match);
 		}
 
-	
 		public void Update(T entity)
 		{
 			_context.Set<T>().Update(entity);
