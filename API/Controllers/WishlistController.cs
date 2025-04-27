@@ -8,101 +8,112 @@ using System.Security.Claims;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class WishlistController : ControllerBase
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly APIResponse _response;
+	[Route("api/[controller]")]
+	[ApiController]
+	public class WishlistController : ControllerBase
+	{
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly APIResponse<Wishlist> _response;
 
-        public WishlistController(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-            _response = new APIResponse();
-        }
 
-        [HttpGet]
-        public async Task<ActionResult<APIResponse>> GetWishlist()
-        {
-            try
-            {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (userId == null)
-                {
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.Errors = new List<string> { "User ID not found" };
-                    return BadRequest(_response);
-                }
+		public WishlistController(IUnitOfWork unitOfWork, APIResponse<Wishlist> response)
+		{
+			_unitOfWork = unitOfWork;
+			_response = response;
+		}
 
-                var wishlist = await _unitOfWork.Wishlists.GetWishlistByUserId(userId);
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.Data = wishlist;
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.Errors = new List<string> { ex.Message };
-                return Ok(_response);
-            }
-        }
+		[HttpGet]
+		public async Task<ActionResult<APIResponse<Wishlist>>> GetWishlist()
+		{
+			try
+			{
+				var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+				if (userId == null)
+				{
+					_response.StatusCode = HttpStatusCode.BadRequest;
+					_response.Errors = new List<string> { "User ID not found" };
+					return BadRequest(_response);
+				}
 
-        [HttpPost]
-        public async Task<ActionResult<APIResponse>> AddToWishlist(int productId)
-        {
-            try
-            {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (userId == null)
-                {
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.Errors = new List<string> { "User ID not found" };
-                    return BadRequest(_response);
-                }
+				var wishlist = await _unitOfWork.Wishlists.GetWishlistByUserId(userId);
+				_response.StatusCode = HttpStatusCode.OK;
+				_response.Data = wishlist;
+				return Ok(_response);
+			}
+			catch (Exception ex)
+			{
+				_response.StatusCode = HttpStatusCode.InternalServerError;
+				_response.Errors = new List<string> { ex.Message };
+				return StatusCode(500, _response);
+			}
+		}
 
-                bool Added = await _unitOfWork.Wishlists.AddProductToWishlist(productId, userId);
+		[HttpPost]
+		public async Task<ActionResult<APIResponse<bool>>> AddToWishlist(int productId)
+		{
+			var response = new APIResponse<bool>(
+			HttpStatusCode.BadRequest,  // Status code
+			"Something went wrong",  // Message
+			false  // Data (bool value)
+			);
 
-                _response.Data = Added;
-                _response.StatusCode = HttpStatusCode.OK;
+			try
+			{
+				var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+				if (userId == null)
+				{
+					response.StatusCode = HttpStatusCode.BadRequest;
+					response.Errors = new List<string> { "User ID not found" };
+					return BadRequest(response);
+				}
 
-                return Ok(_response);
+				bool added = await _unitOfWork.Wishlists.AddProductToWishlist(productId, userId);
+				response.Data = added;
+				response.StatusCode = HttpStatusCode.OK;
 
-            }
-            catch (Exception ex)
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.Errors.Add(ex.Message);
-                return BadRequest(_response);
-            }
-        }
+				return Ok(response);
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = HttpStatusCode.BadRequest;
+				response.Errors = new List<string> { ex.Message };
+				return BadRequest(response);
+			}
+		}
 
-        [HttpDelete]
-        public async Task<ActionResult<APIResponse>> RemoveWishlistProduct(int productId)
-        {
-            try
-            {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (userId == null)
-                {
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.Errors = new List<string> { "User ID not found" };
-                    return BadRequest(_response);
-                }
+		[HttpDelete]
+		public async Task<ActionResult<APIResponse<bool>>> RemoveWishlistProduct(int productId)
+		{
 
-                bool Removed = await _unitOfWork.Wishlists.RemoveFromWishlist(productId, userId);
 
-                _response.Data = Removed;
-                _response.StatusCode = HttpStatusCode.OK;
+				var response = new APIResponse<bool>(
+				HttpStatusCode.BadRequest,  // Status code
+				"Something went wrong",  // Message
+				false  // Data (bool value)
+				);
 
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.Errors.Add(ex.Message);
-                return BadRequest(_response);
-            }
+			try
+			{
+				var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+				if (userId == null)
+				{
+					response.StatusCode = HttpStatusCode.BadRequest;
+					response.Errors = new List<string> { "User ID not found" };
+					return BadRequest(response);
+				}
 
-        }
-    }
+				bool removed = await _unitOfWork.Wishlists.RemoveFromWishlist(productId, userId);
+				response.Data = removed;
+				response.StatusCode = HttpStatusCode.OK;
+
+				return Ok(response);
+			}
+			catch (Exception ex)
+			{
+				response.StatusCode = HttpStatusCode.BadRequest;
+				response.Errors = new List<string> { ex.Message };
+				return BadRequest(response);
+			}
+		}
+	}
 }

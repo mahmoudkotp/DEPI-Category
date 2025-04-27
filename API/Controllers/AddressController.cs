@@ -4,6 +4,7 @@ using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using MVC.Models;
 using System.Net;
 using System.Security.Claims;
 
@@ -14,12 +15,14 @@ namespace API.Controllers
     public class AddressController : ControllerBase
     {
         private readonly IUnitOfWork _unitofWork;
-        private readonly APIResponse _response;
+        //private readonly APIResponse<List<OrderItem>> _response;
+		//private readonly APIResponse<List<Address>> _response;
+		private readonly APIResponse<object> _response;
 
-        public AddressController(IUnitOfWork unitOfWork)
+
+		public AddressController(IUnitOfWork unitOfWork)
         {
             _unitofWork = unitOfWork;
-            _response = new APIResponse();
         }
 
         [HttpGet]
@@ -53,6 +56,7 @@ namespace API.Controllers
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.Data = address;
+
 
             return Ok(_response);
         }

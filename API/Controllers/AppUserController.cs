@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using MVC.Models;
 using System.Net;
 
 namespace API.Controllers
@@ -11,13 +12,16 @@ namespace API.Controllers
     public class AppUserController : ControllerBase
     {
         private readonly AppUserRepository _userRepo;
-        protected APIResponse _response;
+        //protected APIResponse _response;
+		//private readonly APIResponse<List<OrderItem>> _response;
+		private readonly APIResponse<object> _response;
 
-        public AppUserController(AppUserRepository userRepo)
+
+		public AppUserController(AppUserRepository userRepo)
         {
             _userRepo = userRepo;
-            _response = new APIResponse();
-        }
+
+		}
 
         //POST: api/AppUser/Register
         [HttpPost("Register")]

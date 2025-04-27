@@ -8,7 +8,6 @@ namespace Models
 {
     public class AppUser : IdentityUser
     {
-        // Additional properties can be added here
         [MaxLength(50)]
         [Required]
         public string FirstName { get; set; }

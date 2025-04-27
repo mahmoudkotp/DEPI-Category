@@ -47,12 +47,13 @@ namespace DataAccess.Repository
 				.ThenInclude(oi => oi.Product)
 				.FirstOrDefault(o => o.Id == id);
 		}
-
+		
 		public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId)
 		{
 			return await _context.Orders
 				.Where(o => o.UserId == userId)
-				.Include(o => o.OrderItems)
+				.Include(o => o.OrderItems)  // إذا كنت بحاجة لربط OrderItems
+				.Include(o => o.Address)     // إذا كنت بحاجة لربط Address
 				.ToListAsync();
 		}
 

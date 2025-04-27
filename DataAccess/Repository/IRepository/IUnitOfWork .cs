@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,10 @@ namespace DataAccess.Repository.IRepository
 		//public OrderItemRepository OrderItems { get; }
 		IOrderItemRepository OrderItems { get; }
 
+
+		Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId);
+
 		Task SaveAsync();
+
     }
 }

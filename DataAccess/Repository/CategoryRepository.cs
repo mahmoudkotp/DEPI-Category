@@ -19,10 +19,9 @@ namespace DataAccess.Repository
 			_context = context;
 		}
 
-		// دالة تجيب الكاتيجوري مع المنتجات المرتبطة
 		public Category GetCategoryWithProducts(int id)
 		{
-			return _context.Categories.Include(c => c.Products) // هنا بنشمل المنتجات المرتبطة بالكاتيجوري
+			return _context.Categories.Include(c => c.Products) 
 						   .FirstOrDefault(c => c.Id == id);
 		}
 
@@ -38,21 +37,24 @@ namespace DataAccess.Repository
 			return _context.Categories.ToList();
 		}
 
+	
 		public Category GetById(int id)
 		{
-			return _context.Categories.Find(id);
+			return _context.Categories.Include(c => c.Products)
+					.FirstOrDefault(c => c.Id == id);
 		}
+
 
 		public void Add(Category category)
 		{
 			_context.Categories.Add(category);
-			_context.SaveChanges();
+			//_context.SaveChanges();
 		}
 
 		public void Update(Category category)
 		{
 			_context.Categories.Update(category);
-			_context.SaveChanges();
+			//_context.SaveChanges();
 		}
 
 		public void Delete(int id)
@@ -61,7 +63,7 @@ namespace DataAccess.Repository
 			if (category != null)
 			{
 				_context.Categories.Remove(category);
-				_context.SaveChanges();
+				//_context.SaveChanges();
 			}
 		}
 	}

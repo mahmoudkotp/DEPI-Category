@@ -1,5 +1,6 @@
 ﻿using DataAccess.DataBase;
 using DataAccess.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -40,10 +41,16 @@ namespace DataAccess.Repository
 			//OrderRepository = orderRepository;
 		}
 
-		
+		public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId)
+		{
+			return await Orders.GetOrdersByUserIdAsync(userId); 
+		}
+
 		public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
         }
-    }
+
+				
+	}
 }

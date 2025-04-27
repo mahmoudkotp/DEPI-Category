@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Repository.IRepository;
+using Models;
 
 namespace DataAccess.Repository
 {
@@ -113,6 +114,16 @@ namespace DataAccess.Repository
 		{
 			return await dbSet.FindAsync(id);
 		}
+
+		public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId)
+		{
+			return await _context.Orders
+				.Where(o => o.UserId == userId)
+				.Include(o => o.OrderItems)   // إذا كان لديك علاقة مع OrderItems
+				.Include(o => o.Address)      // إذا كنت بحاجة للـ Address المرتبط بالطلب
+				.ToListAsync();
+		}
+
 
 		public async Task RemoveAsync(T entity)
 		{
